@@ -1,3 +1,6 @@
+<style lang="less">
+  @import "./main.less";
+</style>
 <style scoped>
   .layout {
     border: 1px solid #d7dde4;
@@ -65,33 +68,24 @@
       <Col :span="spanLeft" class="layout-menu-left">
       <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']">
         <div class="layout-logo-left"></div>
-        <Submenu name="1">
-          <template slot="title">
-            <Icon type="ios-navigate"></Icon>
-            导航一
-          </template>
-          <router-link to="/hello">
-            <Menu-item name="1-1">选项 1</Menu-item>
-          </router-link>
-          <router-link to="/hello1">
-            <Menu-item name="1-2">选项 2</Menu-item>
-          </router-link>
-          <router-link to="hello2">
-            <Menu-item name="1-3">选项 3</Menu-item>
-          </router-link>
-        </Submenu>
+        <router-link to="/">
+          <Menu-item name="1">
+            <Icon type="navicon-round" :size="iconSize"></Icon>
+            <span class="layout-text">控制台</span>
+          </Menu-item>
+        </router-link>
         <Submenu name="2">
           <template slot="title">
-            <Icon type="ios-keypad"></Icon>
-            导航二
+            <Icon type="ios-keypad" :size="iconSize"></Icon>
+            <span class="layout-text">排名</span>
           </template>
-          <Menu-item name="2-1">选项 1</Menu-item>
-          <Menu-item name="2-2">选项 2</Menu-item>
+          <router-link :to="{path: '/allRank'}"><Menu-item name="2-1">总体排名</Menu-item></router-link>
+          <Menu-item name="2-2">单科排名</Menu-item>
         </Submenu>
         <Submenu name="3">
           <template slot="title">
-            <Icon type="ios-analytics"></Icon>
-            导航三
+            <Icon type="ios-analytics" :size="iconSize"></Icon>
+            <span class="layout-text">导航三</span>
           </template>
           <Menu-item name="3-1">选项 1</Menu-item>
           <Menu-item name="3-2">选项 2</Menu-item>
@@ -99,10 +93,33 @@
       </Menu>
       </Col>
       <Col :span="spanRight">
-      <div class="layout-header">
-        <Button type="text" @click="toggleClick">
-          <Icon type="navicon" size="32"></Icon>
-        </Button>
+      <div class="main-header">
+        <div class="navicon-con">
+          <Button type="text" @click="toggleClick">
+            <Icon type="navicon" size="32"></Icon>
+          </Button>
+        </div>
+        <div class="header-middle-con">
+          <div class="main-breadcrumb">
+            <span style="font-size:20px">学生成绩管理平台</span>
+          </div>
+        </div>
+        <div class="header-avator-con">
+          <div class="user-dropdown-menu-con">
+            <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
+              <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
+                <a href="javascript:void(0)">
+                  <span class="main-user-name">{{ userName }}</span>
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="loginout" divided>退出登录</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              <Avatar :src="avatorPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
+            </Row>
+          </div>
+        </div>
       </div>
       <div class="layout-content">
         <div class="layout-content-main">
@@ -117,17 +134,26 @@
   </div>
 </template>
 <script>
+  import Cookies from 'js-cookie'
+
   export default {
     data () {
       return {
         spanLeft: 5,
-        spanRight: 19
+        spanRight: 19,
+        userName: ''
       }
     },
     computed: {
       iconSize () {
         return this.spanLeft === 5 ? 14 : 24
+      },
+      avatorPath () {
+        return localStorage.avatorImgPath
       }
+    },
+    mounted () {
+      this.userName = Cookies.get('user')
     },
     methods: {
       toggleClick () {
@@ -137,6 +163,19 @@
         } else {
           this.spanLeft = 5
           this.spanRight = 19
+        }
+      },
+      handleClickUserDropdown (name) {
+        if (name === 'loginout') {
+          console.log('loginout')
+          // 退出登录
+          Cookies.remove('user')
+          Cookies.remove('password')
+          Cookies.remove('hasGreet')
+          Cookies.remove('access')
+          this.$router.push({
+            name: 'login'
+          })
         }
       }
     }

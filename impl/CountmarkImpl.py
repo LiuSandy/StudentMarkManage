@@ -15,17 +15,45 @@ class Countmark:
     def __init__(self):
         self.dataPath = config.PATH + '\database\\'
         self.file = self.dataPath + 'studentInfo.csv'
+        self.coursesFile = self.dataPath + 'coursesInfo.csv'
         self.df = pd.read_csv(self.file, encoding='utf-8', dtype="str")
+        self.coursesDf = pd.read_csv(self.coursesFile, encoding='utf-8', dtype="str")
+
+    # 统计信息
+    def getInfo(self):
+        countDf = self.df.groupby(['studentId', 'name']).sum()
+        allStudent = len(countDf)  # 总人数
+
+        # 及格总数
+        passDf = self.df[self.df.score >= '60']
+        passRate = len(passDf) / (allStudent * 6)
+
+        result = []
+        # 课程信息
+        dict = {}
+        allDict = {}
+        subjectDf = self.df.groupby(['subject']).sum()
+        for i in subjectDf.index:
+            oneDf = self.df[self.df.subject == i]
+            onePassDf = oneDf[oneDf.score >= '60']
+            detilTuple = (len(onePassDf), '%.2f%%' % ((len(onePassDf) / allStudent) * 100))
+            dict[i] = detilTuple
+        allDict['allStudent'] = allStudent
+        allDict['passRate'] = '%.2f%%' % ((len(passDf) / (allStudent * 6)) * 100)
+        allDict['detail'] = dict
+        result.append(allDict)
+        return allDict
 
     # 计算学生的总成绩并进行排名
     def getRanking(self):
-        countDf = self.df.groupby(['studentId', 'name']).sum()
+        df = pd.read_csv(self.file)
+        countDf = df.groupby(['studentId', 'name']).sum()
         sortCountDf = countDf.sort_values(['score'], ascending=False)  # 按顺序从大到小
 
         result = []
 
         for index, row in sortCountDf.iterrows():
-            tupleResult = (index[0], index[1], row['score'])
+            tupleResult = (index[0], index[1], str(row['score']))
             result.append(tupleResult)
         return result
 
@@ -117,12 +145,29 @@ class Countmark:
 
     # 以上所有查到的信息,都显示科目的成绩等级
     def showGrade(self):
-        pass
+        countDf = self.df.groupby(['studentId', 'name']).sum()
+        allStudent = len(countDf)  # 总人数
+        result = []
+        # 课程信息
+
+        allDict = {}
+        subjectDf = self.df.groupby(['subject']).sum()
+        grade = ['60', '75', '90']
+        for i in subjectDf.index:
+            dict = {}
+            oneDf = self.df[self.df.subject == i]
+            for j in grade:
+                onePassDf = oneDf[oneDf.score >= j]
+                detilTuple = (len(onePassDf), len(onePassDf) / allStudent)
+                dict[j] = detilTuple
+            allDict[i] = dict
+        result.append(allDict)
+        return allDict
 
 
 if __name__ == '__main__':
     count = Countmark()
-    # print(count.getRanking())  # 整体排名
+    print(count.getRanking())  # 整体排名
     # print(count.getOneRanking("安卓")) #单科排名
     # count.getRegion(75, 76, subject='安卓') #统计某一分段成绩
-    print(count.search('2017035101018'))
+    # print(count.showGrade())
