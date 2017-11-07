@@ -4,11 +4,14 @@ import router from './router'
 import iView from 'iview'
 import axios from 'axios'
 import echarts from 'echarts'
+import lodash from 'lodash'
 import 'iview/dist/styles/iview.css'
 
 Vue.use(iView)
 Vue.config.productionTip = false
 Vue.config.devtools = true
+Vue.prototype.$_ = lodash
+
 Vue.prototype.$http = axios.create({
   baseURL: 'http://localhost:5000/api/'
 })

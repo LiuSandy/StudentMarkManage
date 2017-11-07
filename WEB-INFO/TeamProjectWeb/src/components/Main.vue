@@ -80,16 +80,14 @@
             <span class="layout-text">排名</span>
           </template>
           <router-link :to="{path: '/allRank'}"><Menu-item name="2-1">总体排名</Menu-item></router-link>
-          <Menu-item name="2-2">单科排名</Menu-item>
+          <router-link :to="{path: '/oneRank'}"><Menu-item name="2-2">单科排名</Menu-item></router-link>
         </Submenu>
-        <Submenu name="3">
-          <template slot="title">
-            <Icon type="ios-analytics" :size="iconSize"></Icon>
-            <span class="layout-text">导航三</span>
-          </template>
-          <Menu-item name="3-1">选项 1</Menu-item>
-          <Menu-item name="3-2">选项 2</Menu-item>
-        </Submenu>
+        <router-link :to="{path: '/details'}">
+        <Menu-item name="3">
+          <Icon type="ios-analytics" :size="iconSize"></Icon>
+          <span class="layout-text">详情</span>
+        </Menu-item>
+        </router-link>
       </Menu>
       </Col>
       <Col :span="spanRight">

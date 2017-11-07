@@ -1,4 +1,4 @@
-from flask import Flask, json, jsonify
+from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 from impl.CountmarkImpl import Countmark
 import pandas as pd
@@ -40,10 +40,15 @@ def getAllRank():
 
 @app.route('/api/selectRank')
 def SelectRank():
-    subjectName = '安卓'
+    subjectName = request.args.get('q')
     selectRank = count.getOneRanking(subjectName)
     return json.dumps(selectRank)
 
+@app.route('/api/getDetail')
+def getDetail():
+    studentId = request.args.get('q')
+    detail = count.search(int(studentId))
+    return json.dumps(detail)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -111,10 +111,11 @@ class Countmark:
            }
         }
         """
+        df = pd.read_csv(self.file)
         result = []
         dict = {}
         # 总成绩
-        totalScore = self.df.groupby(['studentId', 'name']).sum()
+        totalScore = df.groupby(['studentId', 'name']).sum()
         sortTotalScore = totalScore.sort_values(['score'], ascending=False)
         a = 0
         for index, item in sortTotalScore.iterrows():
@@ -122,7 +123,7 @@ class Countmark:
             if index[0] == studentId:
                 dict['studentId'] = studentId
                 dict['name'] = index[1]
-                dict['totalScore'] = item['score']
+                dict['totalScore'] = str(item['score'])
                 dict['totalRanking'] = a
 
         # 所有科目
@@ -130,15 +131,13 @@ class Countmark:
         allSubject = self.df.groupby(['subject']).sum()
         for index, item in allSubject.iterrows():
             oneSubjectScore = self.df[self.df.subject == index]
-            oneScore = oneSubjectScore[oneSubjectScore.studentId == studentId]
             sortOneScore = oneSubjectScore.sort_values(['score'], ascending=False)
             i = 0
             for id in sortOneScore['studentId']:
                 i += 1
-                if id == studentId:
-                    oneSubjectTuple = (oneScore['score'].values[0], i)
-                    detailScore[oneScore['subject'].values[0]] = oneSubjectTuple
-
+                if id == str(studentId):
+                    oneSubjectTuple = (sortOneScore['score'].values[0], i)
+                    detailScore[sortOneScore['subject'].values[0]] = oneSubjectTuple
         dict['detailScore'] = detailScore
         result.append(dict)
         return result
@@ -167,7 +166,8 @@ class Countmark:
 
 if __name__ == '__main__':
     count = Countmark()
-    print(count.getRanking())  # 整体排名
+    # print(count.getRanking())  # 整体排名
     # print(count.getOneRanking("安卓")) #单科排名
     # count.getRegion(75, 76, subject='安卓') #统计某一分段成绩
     # print(count.showGrade())
+    # print(count.search(2017035107140))

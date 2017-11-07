@@ -19,6 +19,7 @@
     "js-cookie": "^2.2.0",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
+    "lodash": "^4.17.4",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
     "stylus-loader": "^3.0.1",

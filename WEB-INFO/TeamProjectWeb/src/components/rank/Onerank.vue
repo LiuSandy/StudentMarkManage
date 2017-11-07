@@ -1,8 +1,20 @@
 <template>
   <div>
-    <Input v-model="value" icon="search" placeholder="请输入学号" style="width: 200px" @on-change="_getAllRank"></Input>
+    <Dropdown @on-click="getSub" style="margin-left: 20px">
+      <Button type="primary">选择属性
+        <Icon type="arrow-down-b"></Icon>
+      </Button>
+      <Dropdown-menu slot="list">
+        <Dropdown-item name="安卓">安卓</Dropdown-item>
+        <Dropdown-item name="C语言">C语言</Dropdown-item>
+        <Dropdown-item name="Python">Python</Dropdown-item>
+        <Dropdown-item name="快速建站">快速建站</Dropdown-item>
+        <Dropdown-item name="Linux">Linux</Dropdown-item>
+        <Dropdown-item name="网络">网络</Dropdown-item>
+      </Dropdown-menu>
+    </Dropdown>
     <br><br>
-    <Table border :context="self" :columns="columns1" :data="data1"></Table>
+    <Table border :columns="columns" :data="data"></Table>
     <br>
     <Page :total="Number(total)" :current="1" show-elevator @on-change="changePage"></Page>
   </div>
@@ -13,11 +25,8 @@
     data () {
       return {
         total: '',
-        value: '',
-        allRank: [],
         alldata: [],
-        self: this,
-        columns1: [
+        columns: [
           {
             title: '学号',
             key: 'studentId'
@@ -27,8 +36,12 @@
             key: 'name'
           },
           {
-            title: '总分',
-            key: 'allScore'
+            title: '课程名',
+            key: 'subName'
+          },
+          {
+            title: '课程分数',
+            key: 'subScore'
           },
           {
             title: '排名',
@@ -71,33 +84,27 @@
             }
           }
         ],
-        data1: []
+        data: []
       }
     },
     mounted () {
-      this._getAllRank()
+      this._selectRank('安卓')
     },
     methods: {
-      _getAllRank () {
-        this.$http.get('/getAllRank').then(response => {
+      getSub (name) {
+        this._selectRank(name)
+      },
+      _selectRank (name) {
+        this.$http.get('/selectRank', {params: {'q': name}}).then(response => {
+          let data = response.data
           this.total = response.data.length
-          let temp = []
-          if (this.value !== '') {
-            let studentId = this.value
-            let index = 0
-            index = this.$_.findIndex(response.data, function (chr) {
-              return chr[0] === Number(studentId)
-            })
-            temp = response.data[index]
-          } else {
-            temp = response.data
-          }
           let tempData = []
-          for (let i in temp) {
+          for (let i in data) {
             let item = {
-              studentId: temp[i][0],
-              name: temp[i][1],
-              allScore: temp[i][2],
+              studentId: data[i][0],
+              name: data[i][1],
+              subName: data[i][2],
+              subScore: data[i][3],
               grade: Number(i) + 1
             }
             tempData.push(item)
@@ -106,19 +113,20 @@
               tempData = []
             }
           }
-          this.data1 = this.alldata[0]
+          console.log(tempData)
+          this.data = this.alldata[0]
         })
+      },
+      changePage (event) {
+        if (this.alldata.length >= event) {
+          this.data = this.alldata[event - 1]
+        }
       },
       show (index) {
         this.$Modal.info({
           title: '学生成绩详情',
           content: `sale_nbr：${this.data1[index].sale_nbr}<br>cnt：${this.data1[index].cnt}<br>round：${this.data1[index].round}<br>in_degree：${this.data1[index].in_degree}<br>out_degree：${this.data1[index].out_degree}<br>page_rank：${this.data1[index].PageRank}`
         })
-      },
-      changePage (event) {
-        if (this.alldata.length >= event) {
-          this.data1 = this.alldata[event - 1]
-        }
       }
     }
   }

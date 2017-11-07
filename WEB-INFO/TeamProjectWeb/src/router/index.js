@@ -9,6 +9,8 @@ const Main = resolve => require(['@/components/Main'], resolve)
 const Dashboard = resolve => require(['@/components/dashboard/Dashboard'], resolve)
 
 const AllRank = resolve => require(['@/components/rank/Allrank'], resolve)
+const OneRank = resolve => require(['@/components/rank/Onerank'], resolve)
+const Details = resolve => require(['@/components/details/Details'], resolve)
 
 // error-router
 const NotFind = resolve => require(['@/components/error/404'], resolve)
@@ -29,6 +31,16 @@ export default new Router({
           path: '/allRank',
           name: 'allRank',
           component: AllRank
+        },
+        {
+          path: '/oneRank',
+          name: 'oneRank',
+          component: OneRank
+        },
+        {
+          path: '/details',
+          name: 'details',
+          component: Details
         }
       ]
     },
