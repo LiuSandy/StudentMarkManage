@@ -1,8 +1,15 @@
 <template>
   <div>
-    <Input v-model="value" icon="search" placeholder="请输入学号" style="width: 200px" @on-change="_getDetail"></Input>
-    <br><br>
-    <Table border :context="self" :columns="columns" :data="data"></Table>
+    <Row>
+      <Col span="15" offset="1">
+      <Input v-model="value" icon="search" placeholder="请输入学号" style="width: 200px" @on-change="_getDetail"></Input>
+      <br><br>
+      <Table border :context="self" :columns="columns" :data="data"></Table>
+      </Col>
+      <Col span="7">
+      <div id="myChart" :style="{height: '300px'}"></div>
+      </Col>
+    </Row>
   </div>
 </template>
 <script>
@@ -100,6 +107,43 @@
             Net: detail['快速建站'][0]
           }
           this.data.push(item)
+          let pieData = []
+          for (let i in detail) {
+            console.log(detail[i])
+            let item = {
+              value: detail[i],
+              name: i
+            }
+            pieData.push(item)
+          }
+
+          let myChart = this.$echarts.init(document.getElementById('myChart'))
+
+          myChart.setOption({
+            title: {
+              text: '课程优秀率'
+            },
+            tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            series: [
+              {
+                name: '成绩',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: pieData,
+                itemStyle: {
+                  emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
+                }
+              }
+            ]
+          })
         })
       },
       show (index) {

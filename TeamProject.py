@@ -44,11 +44,22 @@ def SelectRank():
     selectRank = count.getOneRanking(subjectName)
     return json.dumps(selectRank)
 
+
 @app.route('/api/getDetail')
 def getDetail():
     studentId = request.args.get('q')
     detail = count.search(int(studentId))
     return json.dumps(detail)
+
+
+@app.route('/api/getRegion')
+def getRegion():
+    startScore = request.args.get('startScore')
+    endScore = request.args.get('endScore')
+    subject = request.args.get('subject')
+    result = count.getRegion(startScore, endScore, subject)
+    return json.dumps(result)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

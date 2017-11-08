@@ -1,18 +1,19 @@
 <template>
   <div>
-    <Dropdown @on-click="getSub" style="margin-left: 20px">
-      <Button type="primary">选择属性
-        <Icon type="arrow-down-b"></Icon>
-      </Button>
-      <Dropdown-menu slot="list">
-        <Dropdown-item name="安卓">安卓</Dropdown-item>
-        <Dropdown-item name="C语言">C语言</Dropdown-item>
-        <Dropdown-item name="Python">Python</Dropdown-item>
-        <Dropdown-item name="快速建站">快速建站</Dropdown-item>
-        <Dropdown-item name="Linux">Linux</Dropdown-item>
-        <Dropdown-item name="网络">网络</Dropdown-item>
-      </Dropdown-menu>
-    </Dropdown>
+    <Row>
+      <Col span="6">
+      <Select v-model="model" clearable style="width:200px">
+        <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
+      </Select>
+      </Col>
+      <Col span="9" offset="1">
+      分数段：
+      <Input-number :max="100" :min="1" :step="5" v-model="value1"></Input-number>
+      ——
+      <Input-number :max="100" :min="1" :step="5" v-model="value2"></Input-number>
+      </Col>
+      <Button type="primary" offset="1" @click="getParam">查询</Button>
+    </Row>
     <br><br>
     <Table border :columns="columns" :data="data"></Table>
     <br>
@@ -24,6 +25,8 @@
   export default {
     data () {
       return {
+        value1: 0,
+        value2: 10,
         total: '',
         alldata: [],
         columns: [
@@ -84,18 +87,58 @@
             }
           }
         ],
-        data: []
+        data: [],
+        cityList: [
+          {
+            value: '安卓',
+            label: '安卓'
+          },
+          {
+            value: 'C语言',
+            label: 'C语言'
+          },
+          {
+            value: 'Python',
+            label: 'Python'
+          },
+          {
+            value: 'Linux',
+            label: 'Linux'
+          },
+          {
+            value: '快速建站',
+            label: '快速建站'
+          },
+          {
+            value: '网络',
+            label: '网络'
+          }
+        ],
+        model: ''
       }
     },
     mounted () {
       this._selectRank('安卓')
     },
     methods: {
-      getSub (name) {
-        this._selectRank(name)
+      getParam () {
+        console.log(this.model8)
+        let param = {
+          startScore: this.value1,
+          endScore: this.value2,
+          subject: this.model
+        }
+        this._selectRank(param)
+        console.log('HELLO WORLD')
       },
-      _selectRank (name) {
-        this.$http.get('/selectRank', {params: {'q': name}}).then(response => {
+      _selectRank (param) {
+        this.$http.get('/getRegion', {
+          params: {
+            startScore: param.startScore,
+            endScore: param.endScore,
+            subject: param.subject
+          }
+        }).then(response => {
           let data = response.data
           this.total = response.data.length
           let tempData = []
@@ -113,7 +156,6 @@
               tempData = []
             }
           }
-          console.log(tempData)
           this.data = this.alldata[0]
         })
       },

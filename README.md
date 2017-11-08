@@ -8,3 +8,32 @@
 - 用户可以输入学号来查询该学生的成绩信息及总成绩和单科成绩的排名
 - 以上所有查到的信息,都显示科目的成绩等级
 
+## 文件说明
+TeamProject  
+&nbsp;&nbsp;&nbsp;&nbsp;-- database  :数据文件  
+&nbsp;&nbsp;&nbsp;&nbsp;-- impl:具体方法实现  
+&nbsp;&nbsp;&nbsp;&nbsp;-- WEB-INFO:前台页面展示  
+&nbsp;&nbsp;&nbsp;&nbsp;-- config.py:配置文件  
+&nbsp;&nbsp;&nbsp;&nbsp;-- TeamProject.py:路由请求  
+&nbsp;&nbsp;&nbsp;&nbsp;-- README.md   
+
+## 相关技术
+- 服务端：Python3.6、flask、anaconda
+- 页面：vue、iview
+- 网络请求：axios
+- 图表：echartjs
+
+## 安装操作
+1. 下载文件
+```
+    git clone [URL]
+```
+2. 启动服务
+```
+    python TeamProject.py
+```
+3. 启动web服务,进入WEB-INFO/TeamProjectWeb路径
+```
+    yarn install
+    yarn run dev
+```
