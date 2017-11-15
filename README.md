@@ -37,3 +37,12 @@ TeamProject
     yarn install
     yarn run dev
 ```
+
+## 作品暂展示
+- 登陆界面
+![image](./images/login.jpg)
+- 首页
+![image](./images/index.jpg)
+- 数据展示
+![image](./images/show1.jpg)
+![image](./images/show2.jpg)
