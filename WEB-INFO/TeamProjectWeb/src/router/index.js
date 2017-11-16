@@ -19,6 +19,11 @@ const NotBad = resolve => require(['@/components/error/500'], resolve)
 export default new Router({
   routes: [
     {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
       path: '/',
       component: Main,
       children: [
@@ -43,11 +48,6 @@ export default new Router({
           component: Details
         }
       ]
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
     },
     {
       path: '*',

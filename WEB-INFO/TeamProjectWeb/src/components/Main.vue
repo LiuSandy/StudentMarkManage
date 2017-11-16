@@ -165,7 +165,6 @@
       },
       handleClickUserDropdown (name) {
         if (name === 'loginout') {
-          console.log('loginout')
           // 退出登录
           Cookies.remove('user')
           Cookies.remove('password')
